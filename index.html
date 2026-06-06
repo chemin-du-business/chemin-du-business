@@ -1277,30 +1277,30 @@ function submitPopup(e){
 
 // ── INJECTION CONFIG DANS LE DOM ──
 (function(){
+  var l1 = CONFIG.soir1.dateLabel; // ex. "Lundi 15 juin"
+  var l2 = CONFIG.soir2.dateLabel; // ex. "Mardi 16 juin"
+
   // Dates dans les event pills
-  var d1 = CONFIG.soir1.date.slice(0,5); // JJ/MM
-  var d2 = CONFIG.soir2.date.slice(0,5);
-  var y  = CONFIG.soir1.date.slice(6);   // AAAA
-  document.getElementById('pill-dates').textContent = d1 + ' & ' + d2 + '/' + y;
+  document.getElementById('pill-dates').textContent = l1 + ' & ' + l2;
   document.getElementById('pill-time').textContent  = CONFIG.soir1.heure + ' heure France';
 
   // Programme Soir 1
-  document.getElementById('prog1-meta-date').textContent = 'Soir 1 — ' + CONFIG.soir1.date;
+  document.getElementById('prog1-meta-date').textContent = 'Soir 1 — ' + l1;
   document.getElementById('prog1-meta-time').textContent = 'à ' + CONFIG.soir1.heureAffichage;
   document.getElementById('prog1-subject').textContent   = CONFIG.soir1.sujet;
 
   // Programme Soir 2
-  document.getElementById('prog2-meta-date').textContent = 'Soir 2 — ' + CONFIG.soir2.date;
+  document.getElementById('prog2-meta-date').textContent = 'Soir 2 — ' + l2;
   document.getElementById('prog2-meta-time').textContent = 'à ' + CONFIG.soir2.heureAffichage;
   document.getElementById('prog2-subject').textContent   = CONFIG.soir2.sujet;
 
   // Bottom CTA
-  document.getElementById('bcta-date1').textContent = CONFIG.soir1.date + ' · ' + CONFIG.soir1.heure;
-  document.getElementById('bcta-date2').textContent = CONFIG.soir2.date + ' · ' + CONFIG.soir2.heure;
+  document.getElementById('bcta-date1').textContent = l1 + ' · ' + CONFIG.soir1.heure;
+  document.getElementById('bcta-date2').textContent = l2 + ' · ' + CONFIG.soir2.heure;
 
   // Popup sub
   document.getElementById('popup-sub-dates').textContent =
-    d1 + ' & ' + d2 + ' à ' + CONFIG.soir1.heure + ' · Places limitées';
+    l1 + ' & ' + l2 + ' à ' + CONFIG.soir1.heure + ' · Places limitées';
 
   // Liens WhatsApp
   document.getElementById('wa-btn-already').href = CONFIG.liens.whatsapp;
