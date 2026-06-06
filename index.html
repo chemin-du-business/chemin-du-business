@@ -1177,7 +1177,7 @@ function submitHeroForm(e){
   else if(!phone.startsWith('+')) phone = '+33' + phone;
   const date = new Date().toLocaleString('fr-FR');
 
-  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive });
+  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure });
   fetch(GOOGLE_SHEET_URL + '?' + params.toString())
     .then(r => r.json())
     .then(res => {
@@ -1254,7 +1254,7 @@ function submitPopup(e){
   document.getElementById('popup-overlay').style.display='none';
 
   // Envoie vers Google Sheets et attend la réponse avant d'afficher le popup
-  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive });
+  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure });
   const url = GOOGLE_SHEET_URL + '?' + params.toString();
 
   fetch(url)
