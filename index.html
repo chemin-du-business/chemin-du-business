@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Challenge E-Commerce x IA 48H | Yanis & Gracia — Chemin du Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<script src="config.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#03050f;
+  --surface:#080d1f;
+  --surface2:#0c1228;
+  --blue:#2563eb;
+  --blue2:#3b82f6;
+  --cyan:#06b6d4;
+  --violet:#7c3aed;
+  --glow-blue:rgba(37,99,235,0.6);
+  --glow-cyan:rgba(6,182,212,0.4);
+  --orange:#f97316;
+  --orange2:#fb923c;
+  --gold:#eab308;
+  --white:#fff;
+  --muted:#64748b;
+  --muted2:#94a3b8;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(37,99,235,0.25);
+  --glass:rgba(255,255,255,0.04);
+  --glass2:rgba(37,99,235,0.08);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--white);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+
+/* ── CANVAS STARS ── */
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.5}
+
+/* ── BLOBS ── */
+.blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;animation:blob-drift 20s ease-in-out infinite}
+.blob-1{width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,.18),transparent 70%);top:-150px;left:-150px;animation-delay:0s}
+.blob-2{width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 70%);bottom:-100px;right:-100px;animation-delay:-7s}
+.blob-3{width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.12),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-14s}
+@keyframes blob-drift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-40px) scale(1.05)}
+  66%{transform:translate(-20px,30px) scale(.95)}
+}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1;opacity:.4;
+}
+
+/* ── LAYOUT ── */
+section,footer,header{position:relative;z-index:2}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+.wrap-wide{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ── NAVBAR ── */
+nav.main-nav{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  z-index:100;
+  background:rgba(8,13,31,.85);
+  backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--border);
+  border-radius:50px;
+  padding:8px 8px 8px 24px;
+  display:inline-flex;align-items:center;gap:20px;
+  box-shadow:0 4px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
+  transition:all .3s;
+  white-space:nowrap;
+  width:auto;
+  max-width:calc(100vw - 32px);
+}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:.04em}
+.nav-logo span{background:linear-gradient(90deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-cta{
+  background:var(--orange);color:#fff;
+  font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:11px 22px;border-radius:50px;cursor:pointer;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 4px 20px rgba(249,115,22,.4);
+  border:none;
+  text-decoration:none;
+  display:inline-flex;align-items:center;line-height:1;
+}
+.nav-cta:hover{background:var(--orange2);transform:translateY(-1px);box-shadow:0 6px 28px rgba(249,115,22,.5)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 24px 80px;
+  text-align:center;
+}
+.hero-inner{max-width:860px;margin:0 auto}
+
+.chip{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(37,99,235,.4);
+  background:rgba(37,99,235,.08);
+  backdrop-filter:blur(12px);
+  border-radius:50px;padding:8px 18px;
+  font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#93c5fd;margin-bottom:32px;
+  animation:fade-up .6s ease both;
+}
+.chip-dot{width:7px;height:7px;background:#22d3ee;border-radius:50%;box-shadow:0 0 8px #22d3ee;animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.4rem,6vw,4.8rem);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-.02em;
+  margin-bottom:24px;
+  animation:fade-up .6s .1s ease both;
+}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#3b82f6 0%,#06b6d4 50%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.hero-sub{
+  font-size:clamp(1rem,2vw,1.2rem);color:#94a3b8;
+  max-width:580px;margin:0 auto 44px;line-height:1.75;
+  animation:fade-up .6s .2s ease both;
+}
+.hero-sub strong{color:#e2e8f0}
+
+/* event pills */
+.event-pills{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;flex-wrap:wrap;margin-bottom:52px;
+  animation:fade-up .6s .3s ease both;
+}
+.epill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(10px);
+  border-radius:10px;padding:10px 18px;
+  font-size:.85rem;font-weight:600;
+}
+.epill svg{width:15px;height:15px;color:#60a5fa;flex-shrink:0}
+.epill-free{border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.06);color:#67e8f9}
+
+/* CTA */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,#f97316,#ea580c);
+  color:#fff;font-weight:800;font-size:1rem;letter-spacing:.05em;text-transform:uppercase;
+  padding:18px 48px;border-radius:50px;border:none;cursor:pointer;
+  box-shadow:0 8px 40px rgba(249,115,22,.45),0 0 0 1px rgba(249,115,22,.2);
+  transition:all .2s;text-decoration:none;
+  animation:fade-up .6s .4s ease both;
+}
+.btn:hover{transform:translateY(-3px);box-shadow:0 16px 56px rgba(249,115,22,.55),0 0 0 1px rgba(249,115,22,.3)}
+.btn:active{transform:translateY(0)}
+.btn svg{width:18px;height:18px}
+.btn-ghost{
+  background:transparent;
+  border:1px solid var(--border2);
+  box-shadow:none;
+  color:#93c5fd;
+  font-size:.85rem;
+  padding:14px 32px;
+}
+.btn-ghost:hover{background:rgba(37,99,235,.1);transform:translateY(-2px);box-shadow:0 4px 20px rgba(37,99,235,.2)}
+
+.cta-note{font-size:.78rem;color:var(--muted);margin-top:14px;animation:fade-up .6s .5s ease both}
+
+/* hero card */
+.hero-card{
+  margin-top:64px;
+  background:linear-gradient(160deg,rgba(12,18,40,.95),rgba(8,13,31,.95));
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 80px rgba(37,99,235,.08),inset 0 1px 0 rgba(255,255,255,.06);
+  animation:fade-up .7s .3s ease both;
+  max-width:720px;margin-left:auto;margin-right:auto;
+}
+.hero-card-top{
+  background:linear-gradient(90deg,rgba(37,99,235,.15),rgba(124,58,237,.1),rgba(6,182,212,.08));
+  padding:28px 32px 24px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;gap:16px;
+}
+.hero-card-icon{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,#2563eb,#06b6d4);
+  border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.hero-card-icon svg{width:24px;height:24px}
+.hero-card-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:4px}
+.hero-card-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;line-height:1.2}
+.hero-card-body{padding:28px 32px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.stat-box{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:18px 14px;text-align:center;
+  transition:border-color .2s,background .2s;
+}
+.stat-box:hover{border-color:rgba(37,99,235,.4);background:rgba(37,99,235,.06)}
+.stat-val{
+  font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;
+  background:linear-gradient(90deg,#60a5fa,#22d3ee);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+}
+.stat-lbl{font-size:.7rem;color:var(--muted2);margin-top:4px;line-height:1.3}
+.prize-bar{
+  background:linear-gradient(90deg,#713f12,#ca8a04,#713f12);
+  background-size:200% 100%;
+  animation:shimmer 3s ease infinite;
+  border-radius:12px;padding:14px 20px;
+  text-align:center;font-weight:800;font-size:.88rem;color:#1c1917;letter-spacing:.06em;text-transform:uppercase;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+
+/* ── FORM BLOCK ── */
+.form-block{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:48px;
+  align-items:center;
+  max-width:820px;
+  margin:64px auto 0;
+  text-align:left;
+}
+@media(max-width:680px){
+  .form-block{grid-template-columns:1fr;text-align:center}
+  .form-photo-col{display:flex;flex-direction:column;align-items:center}
+}
+.form-avatar{
+  width:220px;height:220px;
+  border-radius:50%;
+  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.1));
+  border:3px solid rgba(37,99,235,.4);
+  box-shadow:0 0 60px rgba(37,99,235,.25);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  margin:0 auto;
+}
+.form-avatar img{width:100%;height:100%;object-fit:cover}
+.form-avatar svg{width:80%;height:80%}
+.reg-form{display:flex;flex-direction:column;gap:14px}
+.form-input-wrap{position:relative}
+.form-input-wrap input,
+.phone-wrap input{
+  width:100%;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  padding:16px 20px;
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:.95rem;
+  outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+}
+.form-input-wrap input::placeholder,
+.phone-wrap input::placeholder{color:#64748b}
+.form-input-wrap input:focus,
+.phone-wrap input:focus{
+  border-color:rgba(37,99,235,.7);
+  background:rgba(37,99,235,.08);
+  box-shadow:0 0 0 3px rgba(37,99,235,.15);
+}
+.phone-wrap{position:relative}
+.phone-flag{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;gap:4px;z-index:1;pointer-events:none;
+}
+.btn-submit{
+  width:100%;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  color:#fff;
+  font-family:'Syne',sans-serif;
+  font-size:1rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:18px;border-radius:12px;border:none;cursor:pointer;
+  box-shadow:0 8px 32px rgba(37,99,235,.45);
+  transition:transform .2s,box-shadow .2s,background .2s;
+  margin-top:4px;
+}
+.btn-submit:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 40px rgba(37,99,235,.55);
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+}
+.form-badges{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  margin-top:4px;
+}
+.fbadge{
+  display:flex;align-items:center;gap:6px;
+  font-size:.75rem;font-weight:600;color:#94a3b8;
+}
+.fbadge-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#3b82f6;box-shadow:0 0 6px #3b82f6;flex-shrink:0;
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── SECTION COMMON ── */
+.section{padding:100px 24px}
+.section-alt{background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%)}
+.label{
+  font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#60a5fa;text-align:center;margin-bottom:12px;
+}
+.title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.8rem,4vw,3rem);font-weight:800;
+  text-align:center;line-height:1.15;letter-spacing:-.02em;
+  margin-bottom:16px;
+}
+.title em{font-style:normal;background:linear-gradient(90deg,#60a5fa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{text-align:center;color:var(--muted2);font-size:1rem;max-width:560px;margin:0 auto 64px;line-height:1.75}
+
+/* ── DIVIDER ── */
+.divider{width:60px;height:3px;background:linear-gradient(90deg,#2563eb,#06b6d4);border-radius:2px;margin:16px auto 0}
+
+/* ── OVERVIEW BENTO ── */
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:720px){.bento{grid-template-columns:1fr}}
+.bento-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:20px;padding:28px 24px;
+  transition:transform .3s,border-color .3s,background .3s,box-shadow .3s;
+  cursor:default;
+  overflow:hidden;position:relative;
+}
+.bento-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(37,99,235,.08),transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.bento-card:hover{transform:translateY(-6px);border-color:rgba(37,99,235,.4);background:rgba(37,99,235,.06);box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 30px rgba(37,99,235,.1)}
+.bento-card:hover::before{opacity:1}
+.bento-num{
+  font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;
+  background:linear-gradient(135deg,rgba(59,130,246,.3),rgba(6,182,212,.2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:16px;
+}
+.bento-card h3{font-size:1.05rem;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
+.bento-card p{font-size:.88rem;color:var(--muted2);line-height:1.65}
+.bento-tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#22d3ee;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:6px;padding:3px 10px;margin-top:16px}
+
+/* ── PROGRAMME ── */
+.programme-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:680px){.programme-grid{grid-template-columns:1fr}}
+.prog-card{
+  background:linear-gradient(160deg,var(--surface2),var(--surface));
+  border:1px solid var(--border);
+  border-radius:24px;overflow:hidden;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+}
+.prog-card:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(0,0,0,.4),0 0 40px rgba(37,99,235,.08);border-color:rgba(37,99,235,.3)}
+.prog-head{
+  padding:22px 26px;
+  background:linear-gradient(90deg,rgba(37,99,235,.12),rgba(124,58,237,.06));
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+}
+.prog-num{
+  width:48px;height:48px;flex-shrink:0;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;
+  box-shadow:0 4px 16px rgba(37,99,235,.4);
+}
+.prog-meta-date{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#60a5fa;margin-bottom:3px}
+.prog-meta-time{font-size:.82rem;color:var(--muted2)}
+.prog-body{padding:26px}
+.prog-body h3{font-size:1.05rem;font-weight:700;margin-bottom:18px;line-height:1.35;letter-spacing:-.01em}
+.prog-list{list-style:none;display:flex;flex-direction:column;gap:11px}
+.prog-list li{
+  display:flex;gap:11px;align-items:flex-start;
+  font-size:.875rem;color:#cbd5e1;line-height:1.5;
+}
+.prog-list li .check{
+  width:18px;height:18px;flex-shrink:0;margin-top:1px;
+  background:linear-gradient(135deg,#2563eb,#06b6d4);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+}
+.prog-list li .check svg{width:10px;height:10px}
+.prog-deliverable{
+  margin-top:20px;
+  background:rgba(37,99,235,.07);
+  border:1px solid rgba(37,99,235,.2);
+  border-radius:12px;padding:12px 16px;
+  font-size:.8rem;color:#93c5fd;font-weight:600;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.prog-deliverable svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:#60a5fa}
+
+/* ── HOST ── */
+.host-grid{
+  display:grid;grid-template-columns:280px 1fr;
+  gap:48px;align-items:center;
+  max-width:820px;margin:0 auto;
+}
+@media(max-width:640px){.host-grid{grid-template-columns:1fr;text-align:center}}
+.host-visual{position:relative}
+.host-photo{
+  width:100%;aspect-ratio:1;
+  background:linear-gradient(135deg,rgba(37,99,235,.15),rgba(124,58,237,.1));
+  border-radius:24px;
+  border:1px solid rgba(37,99,235,.2);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 60px rgba(37,99,235,.1);
+}
+.host-photo img{width:100%;height:100%;object-fit:cover;border-radius:23px}
+.host-photo-placeholder{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  color:rgba(96,165,250,.5);
+}
+.host-photo-placeholder svg{width:80px;height:80px}
+.host-badge{
+  position:absolute;bottom:-12px;right:-12px;
+  background:linear-gradient(135deg,#2563eb,#06b6d4);
+  border-radius:14px;padding:10px 16px;
+  font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  box-shadow:0 8px 24px rgba(37,99,235,.5);
+}
+.host-info h2{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.host-role{font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#60a5fa;margin-bottom:24px}
+.host-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+@media(max-width:640px){.host-chips{justify-content:center}}
+.host-chip{
+  background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);
+  border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;color:#93c5fd;
+}
+.host-quote{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-left:3px solid #2563eb;
+  border-radius:0 12px 12px 0;
+  padding:16px 20px;
+  font-size:.92rem;color:#cbd5e1;line-height:1.7;font-style:italic;
+}
+.host-quote strong{color:#fff;font-style:normal}
+
+/* ── TESTIMONIALS ── */
+.testi-section{overflow:hidden;padding:80px 0}
+.testi-track-wrap{position:relative}
+.testi-track-wrap::before,.testi-track-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:10;pointer-events:none;
+}
+.testi-track-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.testi-track-wrap::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.testi-track{display:flex;gap:16px;width:max-content;animation:slide 32s linear infinite}
+.testi-track:hover{animation-play-state:paused}
+.testi-track2{animation-direction:reverse;animation-duration:38s;margin-top:16px}
+@keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tcard{
+  width:280px;flex-shrink:0;
+  background:linear-gradient(160deg,var(--surface2),var(--surface));
+  border:1px solid var(--border);border-radius:18px;padding:22px 20px;
+  transition:border-color .2s;
+}
+.tcard:hover{border-color:rgba(37,99,235,.35)}
+.tcard-stars{display:flex;gap:3px;margin-bottom:12px}
+.tcard-stars svg{width:14px;height:14px;fill:#eab308}
+.tcard-text{font-size:.85rem;color:#cbd5e1;line-height:1.65;margin-bottom:14px}
+.tcard-author{font-size:.8rem;font-weight:700;color:#93c5fd}
+.tcard-result{font-size:.75rem;color:#4ade80;font-weight:600;margin-top:3px;display:flex;align-items:center;gap:5px}
+.tcard-result::before{content:'';width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;box-shadow:0 0 6px #4ade80}
+
+/* ── FAQ ── */
+.faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.faq-item{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  transition:border-color .2s;
+}
+.faq-item:hover,.faq-item.open{border-color:rgba(37,99,235,.3)}
+.faq-q{
+  width:100%;display:flex;justify-content:space-between;align-items:center;
+  padding:20px 22px;font-weight:600;font-size:.92rem;
+  background:none;border:none;color:var(--white);cursor:pointer;
+  text-align:left;gap:16px;
+  transition:color .2s;
+}
+.faq-q:hover{color:#93c5fd}
+.faq-ico{
+  width:26px;height:26px;flex-shrink:0;
+  background:rgba(37,99,235,.12);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .28s,background .2s;
+}
+.faq-item.open .faq-ico{transform:rotate(45deg);background:rgba(37,99,235,.25)}
+.faq-ico svg{width:13px;height:13px}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .32s ease,padding .28s ease;
+  font-size:.88rem;color:var(--muted2);line-height:1.75;
+  padding:0 22px;
+}
+.faq-item.open .faq-a{max-height:220px;padding:0 22px 20px}
+
+/* ── BOTTOM CTA ── */
+.bcta{padding:120px 24px;text-align:center;position:relative;overflow:hidden}
+.bcta-glow{
+  position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);
+  width:800px;height:500px;
+  background:radial-gradient(ellipse,rgba(37,99,235,.2),transparent 65%);
+  pointer-events:none;
+}
+.bcta h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:800;letter-spacing:-.02em;margin-bottom:16px;line-height:1.1}
+.bcta h2 em{font-style:normal;background:linear-gradient(90deg,#3b82f6,#06b6d4,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bcta p{font-size:1rem;color:var(--muted2);margin-bottom:48px}
+.dates-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+.date-card{
+  background:var(--glass2);border:1px solid var(--border2);
+  border-radius:16px;padding:16px 28px;text-align:center;
+}
+.date-card small{display:block;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;margin-bottom:5px}
+.date-card span{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem}
+.date-arrow svg{width:24px;height:24px;color:#1e3a5f}
+.btn-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{
+  background:rgba(3,5,15,.8);
+  border-top:1px solid var(--border);
+  padding:40px 24px;
+}
+.footer-inner{max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.05em}
+.footer-logo span{background:linear-gradient(90deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-socials{display:flex;gap:12px}
+.soc{
+  width:40px;height:40px;background:var(--glass);border:1px solid var(--border);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s,border-color .2s,transform .15s;
+  text-decoration:none;
+}
+.soc:hover{background:rgba(37,99,235,.15);border-color:rgba(37,99,235,.35);transform:translateY(-2px)}
+.soc svg{width:18px;height:18px}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.footer-links a{font-size:.8rem;color:#94a3b8;transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+.footer-disc{font-size:.72rem;color:#64748b;max-width:580px;line-height:1.65}
+.footer-copy{font-size:.74rem;color:#475569}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:540px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  nav{gap:16px;padding:10px 18px}
+  .nav-logo{font-size:.9rem}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas" aria-hidden="true"></canvas>
+<div class="blob blob-1" aria-hidden="true"></div>
+<div class="blob blob-2" aria-hidden="true"></div>
+<div class="blob blob-3" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav class="main-nav" role="navigation" aria-label="Navigation principale">
+  <div class="nav-logo">Chemin <span>du Business</span></div>
+  <button onclick="openPopup()" class="nav-cta" aria-label="S'inscrire au live">S'inscrire</button>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-inner">
+    <div class="chip" role="status">
+      <span class="chip-dot" aria-hidden="true"></span>
+      Challenge 48H Gratuit &nbsp;•&nbsp; 2 jours &nbsp;•&nbsp; En ligne
+    </div>
+
+    <h1 id="hero-title">
+      Challenge<br/>E-Commerce x IA<br/>
+      <em>Lance ta boutique en 48H</em>
+    </h1>
+
+    <p class="hero-sub">
+      <strong>2 soirs pour exécuter, pas pour prendre des notes.</strong><br/>
+      Trouve ton produit, crée ta boutique, lance ta communication — même en partant de zéro.
+    </p>
+
+    <div class="event-pills">
+      <div class="epill">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+        <span id="pill-dates">03/05 &amp; 04/05/2026</span>
+      </div>
+      <div class="epill">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+        <span id="pill-time">20h30 heure France</span>
+      </div>
+      <div class="epill epill-free">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        100% Gratuit
+      </div>
+    </div>
+
+    <!-- FORM SECTION -->
+    <div class="form-block">
+      <div class="form-photo-col">
+        <div class="form-avatar">
+          <img src="mex-photo.jpg" alt="Yanis & Gracia" style="width:100%;height:100%;object-fit:cover;object-position:top center"/>
+        </div>
+        <div style="margin-top:14px;text-align:center">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#fff">Yanis &amp; Gracia</div>
+          <div style="font-size:.75rem;color:#60a5fa;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:3px">Chemin du Business</div>
+        </div>
+      </div>
+
+      <form class="reg-form" onsubmit="submitHeroForm(event)" aria-label="Formulaire d'inscription au live">
+        <div class="form-input-wrap">
+          <label for="hero-prenom" class="sr-only">Votre prénom</label>
+          <input id="hero-prenom" type="text" placeholder="Votre Prénom" autocomplete="given-name" required/>
+        </div>
+        <div class="form-input-wrap">
+          <label for="hero-email" class="sr-only">Votre adresse email</label>
+          <input id="hero-email" type="email" placeholder="Votre adresse Email" autocomplete="email" required/>
+        </div>
+        <div class="form-input-wrap phone-wrap">
+          <label for="hero-phone" class="sr-only">Votre numéro de téléphone</label>
+          <div class="phone-flag" aria-hidden="true">
+            <!-- Drapeau France vertical : bleu | blanc | rouge -->
+            <svg viewBox="0 0 21 15" width="21" height="15" style="border-radius:2px;flex-shrink:0">
+              <rect x="0"  y="0" width="7"  height="15" fill="#002395"/>
+              <rect x="7"  y="0" width="7"  height="15" fill="#ffffff"/>
+              <rect x="14" y="0" width="7"  height="15" fill="#ED2939"/>
+            </svg>
+            <span style="font-size:.82rem;font-weight:700;color:#e2e8f0;margin-left:6px">+33</span>
+          </div>
+          <input id="hero-phone" type="tel" placeholder="Votre n° de téléphone" autocomplete="tel" style="padding-left:82px"/>
+        </div>
+        <button type="submit" class="btn-submit">
+          S'INSCRIRE AU LIVE
+        </button>
+        <div class="form-badges">
+          <span class="fbadge"><span class="fbadge-dot"></span>100% en ligne</span>
+          <span class="fbadge"><span class="fbadge-dot"></span>Débutants acceptés</span>
+          <span class="fbadge"><span class="fbadge-dot"></span>Places limitées</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ OVERVIEW ═══════ -->
+<section class="section section-alt" aria-labelledby="overview-title">
+  <div class="wrap">
+    <p class="label reveal">Ce que tu vas apprendre</p>
+    <h2 class="title reveal" id="overview-title">Le challenge en <em>3 étapes</em><br/>pour vendre en 48H</h2>
+    <div class="divider reveal" aria-hidden="true"></div>
+    <p class="sub reveal">Oublie les formations de 40h. Ce challenge, c'est de l'exécution pure — tu repars avec un business lancé, pas des notes.</p>
+
+    <div class="bento reveal">
+      <div class="bento-card">
+        <div class="bento-num" aria-hidden="true">01</div>
+        <h3>Trouver THE produit gagnant</h3>
+        <p>Le problème avant le produit. Utilise TrendTrack et l'IA pour identifier un produit à forte demande avec une marge x3 minimum.</p>
+        <span class="bento-tag">Soir 1</span>
+      </div>
+      <div class="bento-card">
+        <div class="bento-num" aria-hidden="true">02</div>
+        <h3>Créer ta boutique optimisée</h3>
+        <p>Visuels premium par IA, boutique qui convertit dès le premier visiteur, copywriting avec les leviers psychologiques — sans coder.</p>
+        <span class="bento-tag">Soir 2</span>
+      </div>
+      <div class="bento-card">
+        <div class="bento-num" aria-hidden="true">03</div>
+        <h3>Lancer et encaisser</h3>
+        <p>Pub payante, organique ou micro-influenceurs : la bonne stratégie selon ta situation pour avoir tes premières ventes rapidement.</p>
+        <span class="bento-tag">Soir 2</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PROGRAMME ═══════ -->
+<section class="section" aria-labelledby="prog-title">
+  <div class="wrap">
+    <p class="label reveal">Programme</p>
+    <h2 class="title reveal" id="prog-title"><em>2 soirs.</em> 2 livrables. 0 blabla.</h2>
+    <div class="divider reveal" aria-hidden="true"></div>
+    <p class="sub reveal">60 à 90 minutes par session. Un livrable actionnable à la fin de chaque soir.</p>
+
+    <div class="programme-grid reveal">
+      <article class="prog-card">
+        <div class="prog-head">
+          <div class="prog-num" aria-label="Jour 1">J1</div>
+          <div>
+            <div class="prog-meta-date" id="prog1-meta-date">Soir 1 — 03/05/2026</div>
+            <div class="prog-meta-time" id="prog1-meta-time">à 20h30 (heure France)</div>
+          </div>
+        </div>
+        <div class="prog-body">
+          <h3 id="prog1-subject">Trouver un produit qui se vend<br/>(sans jouer à la loterie)</h3>
+          <ul class="prog-list" aria-label="Contenu du soir 1">
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>E-commerce & opportunité IA — le marché à 7 000 Md$ en 2026</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Trouver THE produit : marge x3, valeur perçue > 30€, logistique fluide</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Tutoriel TrendTrack — espionner la concurrence et réduire le risque</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Sourcing & fournisseurs — trouver les marchés cachés</li>
+          </ul>
+          <div class="prog-deliverable">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm2 0a1 1 0 000 2h2a1 1 0 100-2H9zm-2 4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 0a1 1 0 100 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+            <span><strong style="color:#fff">Livrable :</strong> Ta liste de produits validés + contacts fournisseurs</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="prog-card">
+        <div class="prog-head">
+          <div class="prog-num" aria-label="Jour 2">J2</div>
+          <div>
+            <div class="prog-meta-date" id="prog2-meta-date">Soir 2 — 04/05/2026</div>
+            <div class="prog-meta-time" id="prog2-meta-time">à 20h30 (heure France)</div>
+          </div>
+        </div>
+        <div class="prog-body">
+          <h3 id="prog2-subject">Créer ta boutique prête à vendre<br/>avec l'IA</h3>
+          <ul class="prog-list" aria-label="Contenu du soir 2">
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Création de visuels premium avec l'IA en quelques minutes</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Boutique optimisée : preuve sociale, urgence, copywriting qui convertit</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Stratégie marketing : pub payante, organique ou micro-influenceurs</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Lance la communication et encaisse tes premières ventes</li>
+          </ul>
+          <div class="prog-deliverable">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm2 0a1 1 0 000 2h2a1 1 0 100-2H9zm-2 4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 0a1 1 0 100 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+            <span><strong style="color:#fff">Livrable :</strong> Boutique en ligne + 1ère campagne marketing lancée</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div style="text-align:center;margin-top:52px" class="reveal">
+      <button onclick="openPopup()" class="btn">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        RÉSERVER MA PLACE
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ HOST ═══════ -->
+<section class="section section-alt" aria-labelledby="host-title">
+  <div class="wrap">
+    <p class="label reveal">Tes formateurs</p>
+    <h2 class="title reveal" id="host-title">Qui sont <em>Yanis & Gracia</em> ?</h2>
+    <div class="divider reveal" aria-hidden="true"></div>
+    <br/><br/>
+
+    <div class="host-grid reveal">
+      <div class="host-visual">
+        <div class="host-photo">
+          <img src="mex-photo.jpg" alt="Yanis et Gracia, experts e-commerce" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:22px"/>
+        </div>
+        <div class="host-badge">Chemin du Business</div>
+      </div>
+      <div class="host-info">
+        <h2>Yanis &amp; Gracia</h2>
+        <div class="host-role">Experts E-commerce &amp; Intelligence Artificielle</div>
+        <div class="host-chips" role="list" aria-label="Statistiques">
+          <span class="host-chip" role="listitem">Challenge 48H</span>
+          <span class="host-chip" role="listitem">100% gratuit CPF possible</span>
+          <span class="host-chip" role="listitem">Communauté active</span>
+          <span class="host-chip" role="listitem">Résultats concrets</span>
+        </div>
+        <blockquote class="host-quote">
+          "Spectateur ou Acteur — c'est <strong>ta responsabilité</strong>."<br/><br/>
+          Notre philosophie : <strong>exécution + données + vitesse</strong>. Construis ton business sur des bases solides grâce à l'analyse de données, pas sur la chance ou l'instinct.
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ TESTIMONIALS ═══════ -->
+<section class="testi-section section-alt" aria-labelledby="testi-title">
+  <div class="wrap" style="margin-bottom:48px">
+    <p class="label reveal">Ils sont passés à l'action</p>
+    <h2 class="title reveal" id="testi-title">Les résultats de la <em>communauté</em></h2>
+    <div class="divider reveal" aria-hidden="true"></div>
+  </div>
+
+  <div class="testi-track-wrap" aria-label="Témoignages d'élèves" role="region">
+    <div class="testi-track">
+      <div class="tcard"><div class="tcard-stars" aria-label="5 étoiles sur 5"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"En 8 jours j'avais mes premières ventes. Je n'avais aucune expérience avant ce live."</p><div class="tcard-author">Sarah K.</div><div class="tcard-result">+2 400€ en premier mois</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-label="5 étoiles sur 5"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"La méthode est ultra claire. J'ai trouvé mon produit pendant le live et lancé 3 jours après."</p><div class="tcard-author">Karim B.</div><div class="tcard-result">Boutique lancée en 72h</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-label="5 étoiles sur 5"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"C'est la seule formation où j'ai vraiment exécuté en direct. Résultats immédiats."</p><div class="tcard-author">Léa M.</div><div class="tcard-result">1ère vente le jour du lancement</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-label="5 étoiles sur 5"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"L'IA pour les fiches produits m'a économisé des heures. Contenu top niveau, vraiment."</p><div class="tcard-author">Tom R.</div><div class="tcard-result">Store prêt en 1 weekend</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-label="5 étoiles sur 5"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"Gratuit et ultra complet. Je recommande à tous ceux qui veulent se lancer sans perdre de temps."</p><div class="tcard-author">Amina D.</div><div class="tcard-result">Chiffre d'affaires dès J+5</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-label="5 étoiles sur 5"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"Mex est direct, efficace. Pas de blabla, que du concret. Exactement ce dont j'avais besoin."</p><div class="tcard-author">Julien P.</div><div class="tcard-result">+3 800€ en 3 semaines</div></div>
+      <!-- duplicate for loop -->
+      <div class="tcard"><div class="tcard-stars" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"En 8 jours j'avais mes premières ventes. Je n'avais aucune expérience avant ce live."</p><div class="tcard-author">Sarah K.</div><div class="tcard-result">+2 400€ en premier mois</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"La méthode est ultra claire. J'ai trouvé mon produit pendant le live et lancé 3 jours après."</p><div class="tcard-author">Karim B.</div><div class="tcard-result">Boutique lancée en 72h</div></div>
+      <div class="tcard"><div class="tcard-stars" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div><p class="tcard-text">"Mex est direct, efficace. Pas de blabla, que du concret. Exactement ce dont j'avais besoin."</p><div class="tcard-author">Julien P.</div><div class="tcard-result">+3 800€ en 3 semaines</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FAQ ═══════ -->
+<section class="section" aria-labelledby="faq-title">
+  <div class="wrap">
+    <p class="label reveal">Questions fréquentes</p>
+    <h2 class="title reveal" id="faq-title">On répond à <em>tout</em></h2>
+    <div class="divider reveal" aria-hidden="true"></div>
+    <br/><br/>
+
+    <div class="faq-list reveal" role="list">
+      <div class="faq-item" role="listitem"><button class="faq-q" aria-expanded="false" onclick="faq(this)"><span>Combien de temps dure chaque session ?</span><div class="faq-ico" aria-hidden="true"><svg viewBox="0 0 13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg></div></button><div class="faq-a" role="region">Chaque session live dure entre 60 et 90 minutes. On va à l'essentiel — exécution, pas de rembourrage inutile.</div></div>
+
+      <div class="faq-item" role="listitem"><button class="faq-q" aria-expanded="false" onclick="faq(this)"><span>C'est adapté aux vrais débutants ?</span><div class="faq-ico" aria-hidden="true"><svg viewBox="0 0 13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg></div></button><div class="faq-a" role="region">Oui, le live est conçu pour ceux qui partent de zéro. Aucune expérience préalable requise. Tout est expliqué pas à pas.</div></div>
+
+      <div class="faq-item" role="listitem"><button class="faq-q" aria-expanded="false" onclick="faq(this)"><span>C'est vraiment gratuit ? Aucun frais caché ?</span><div class="faq-ico" aria-hidden="true"><svg viewBox="0 0 13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg></div></button><div class="faq-a" role="region">100% gratuit. Aucune carte bancaire requise. Tu t'inscris et tu rejoins — c'est tout.</div></div>
+
+      <div class="faq-item" role="listitem"><button class="faq-q" aria-expanded="false" onclick="faq(this)"><span>Est-ce qu'il y aura un replay disponible ?</span><div class="faq-ico" aria-hidden="true"><svg viewBox="0 0 13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg></div></button><div class="faq-a" role="region">Un replay sera potentiellement disponible pour les inscrits pendant une durée limitée. Mais pour profiter des bonus et interactions, sois présent en direct.</div></div>
+
+      <div class="faq-item" role="listitem"><button class="faq-q" aria-expanded="false" onclick="faq(this)"><span>De quel matériel ai-je besoin ?</span><div class="faq-ico" aria-hidden="true"><svg viewBox="0 0 13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg></div></button><div class="faq-a" role="region">Un ordinateur (recommandé) ou smartphone avec connexion internet suffit. Pour exécuter en temps réel, l'ordinateur est plus confortable.</div></div>
+
+      <div class="faq-item" role="listitem"><button class="faq-q" aria-expanded="false" onclick="faq(this)"><span>Je manque de temps. Ça vaut quand même le coup ?</span><div class="faq-ico" aria-hidden="true"><svg viewBox="0 0 13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg></div></button><div class="faq-a" role="region">Absolument. 2 soirs × 60-90 min. Un livrable par soir. Format conçu pour les gens occupés qui veulent passer à l'action rapidement.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ BOTTOM CTA ═══════ -->
+<section class="bcta" id="inscription" aria-labelledby="bcta-title">
+  <div class="bcta-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="label reveal">Rejoins le live</p>
+    <h2 class="bcta-title reveal" id="bcta-title">Rejoins le <em>Challenge 48H</em></h2>
+    <p class="reveal" style="color:var(--muted2);margin-bottom:48px">Gratuit · En ligne · Même en partant de zéro · Tout à gagner, rien à perdre.</p>
+
+    <div class="dates-row reveal">
+      <div class="date-card">
+        <small>Soir 1</small>
+        <span id="bcta-date1">03/05/2026 · 20h30</span>
+      </div>
+      <div class="date-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div class="date-card">
+        <small>Soir 2</small>
+        <span id="bcta-date2">04/05/2026 · 20h30</span>
+      </div>
+    </div>
+
+    <div class="btn-row reveal">
+      <button onclick="openPopup()" class="btn" style="font-size:1.05rem;padding:20px 52px" aria-label="S'inscrire gratuitement au live virtuel">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+        S'INSCRIRE AU LIVE
+      </button>
+    </div>
+    <p class="cta-note reveal" style="animation:none;opacity:1">Gratuit · Places limitées · Aucune CB requise</p>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Chemin <span>du Business</span></div>
+    <div class="footer-socials">
+      <a href="#" class="soc" aria-label="Instagram de Mex">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="#" class="soc" aria-label="YouTube de Mex">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+    </div>
+    <p class="footer-disc">Les performances passées ne préjugent pas des performances futures. Les résultats présentés sont des témoignages individuels et ne constituent pas une garantie de résultats.</p>
+    <p class="footer-copy">© 2026 Chemin du Business. Tous droits réservés.</p>
+    <nav class="footer-links" aria-label="Liens légaux">
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+      <a href="cgv.html">CGV</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* ── STARS CANVAS ── */
+(function(){
+  const c=document.getElementById('stars-canvas');
+  const ctx=c.getContext('2d');
+  let stars=[];
+  function resize(){c.width=innerWidth;c.height=innerHeight}
+  function init(){
+    stars=[];
+    for(let i=0;i<180;i++){
+      stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.2+.2,o:Math.random(),sp:Math.random()*.004+.001})
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.o+=s.sp;if(s.o>1||s.o<0)s.sp*=-1;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(148,163,184,${s.o})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',()=>{resize();init()});
+  resize();init();draw();
+})();
+
+/* ── FAQ ── */
+function faq(btn){
+  const item=btn.closest('.faq-item');
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el=>{el.classList.remove('open');el.querySelector('.faq-q').setAttribute('aria-expanded','false')});
+  if(!open){item.classList.add('open');btn.setAttribute('aria-expanded','true')}
+}
+
+/* ── SCROLL REVEAL ── */
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+/* ── STAGGER BENTO ── */
+document.querySelectorAll('.bento-card').forEach((el,i)=>{
+  el.style.transitionDelay=`${i*80}ms`;
+});
+document.querySelectorAll('.prog-card').forEach((el,i)=>{
+  el.style.transitionDelay=`${i*100}ms`;
+});
+</script>
+
+<!-- ═══════ POPUP 1 : INSCRIPTION ═══════ -->
+<div id="popup-overlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title" style="display:none">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopup()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="popup-badge">
+      <span class="chip-dot" style="width:8px;height:8px"></span>
+      LIVE VIRTUEL GRATUIT
+    </div>
+
+    <h2 id="popup-title" class="popup-title">
+      Réserve ta place<br/>gratuitement
+    </h2>
+    <p class="popup-sub" id="popup-sub-dates">03/05 &amp; 04/05 à 20h30 · Places limitées</p>
+
+    <form class="popup-form" onsubmit="submitPopup(event)">
+      <div class="pop-field">
+        <label for="pop-prenom" class="sr-only">Prénom</label>
+        <input id="pop-prenom" type="text" placeholder="Votre Prénom" required autocomplete="given-name"/>
+      </div>
+      <div class="pop-field">
+        <label for="pop-email" class="sr-only">Email</label>
+        <input id="pop-email" type="email" placeholder="Votre adresse Email" required autocomplete="email"/>
+      </div>
+      <div class="pop-field pop-phone">
+        <label for="pop-phone" class="sr-only">Téléphone</label>
+        <div class="phone-flag" aria-hidden="true">
+          <svg viewBox="0 0 21 15" width="21" height="15" style="border-radius:2px;flex-shrink:0">
+            <rect x="0"  y="0" width="7"  height="15" fill="#002395"/>
+            <rect x="7"  y="0" width="7"  height="15" fill="#ffffff"/>
+            <rect x="14" y="0" width="7"  height="15" fill="#ED2939"/>
+          </svg>
+          <span style="font-size:.82rem;font-weight:700;color:#e2e8f0;margin-left:6px">+33</span>
+        </div>
+        <input id="pop-phone" type="tel" placeholder="Votre n° de téléphone" autocomplete="tel" style="padding-left:82px"/>
+      </div>
+      <button type="submit" class="btn-submit" style="margin-top:8px">
+        S'INSCRIRE AU LIVE →
+      </button>
+    </form>
+
+    <p class="popup-legal">Gratuit · Aucune CB · Désinscription à tout moment</p>
+  </div>
+</div>
+
+<!-- ═══════ POPUP 3 : DÉJÀ INSCRIT ═══════ -->
+<div id="popup-already" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-already-title" style="display:none">
+  <div class="popup-box popup-wa-box">
+    <button class="popup-close" onclick="document.getElementById('popup-already').style.display='none';document.body.style.overflow='';" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="popup-wa-icon" style="background:linear-gradient(135deg,#2563eb,#06b6d4)" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="36" height="36"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+
+    <h2 id="popup-already-title" class="popup-title" style="font-size:1.5rem">
+      Tu es déjà inscrit(e) ! ✅
+    </h2>
+    <p class="popup-sub" style="margin-bottom:28px;line-height:1.75">
+      Ton adresse email est <strong style="color:#fff">déjà enregistrée</strong> pour ce live.<br/>
+      Tu recevras tous les détails par email avant chaque session.
+    </p>
+
+    <div style="background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.2);border-radius:14px;padding:18px 20px;margin-bottom:20px;text-align:left">
+      <p style="font-size:.82rem;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Tu n'as pas encore rejoint le groupe ?</p>
+      <p style="font-size:.88rem;color:#94a3b8;margin:0;line-height:1.65">Rejoins la communauté WhatsApp pour recevoir les rappels, les bonus exclusifs et interagir avec les autres membres avant le live.</p>
+    </div>
+
+    <a id="wa-btn-already" href="https://chat.whatsapp.com/VOTRE-LIEN-ICI" target="_blank" rel="noopener" class="btn-whatsapp" aria-label="Rejoindre le groupe WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      REJOINDRE LE GROUPE WHATSAPP
+    </a>
+    <p class="popup-legal" style="margin-top:14px">Groupe exclusif · Rappels avant chaque live · Bonus membres</p>
+  </div>
+</div>
+
+<!-- ═══════ POPUP 2 : WHATSAPP ═══════ -->
+<div id="popup-whatsapp" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-wa-title" style="display:none">
+  <div class="popup-box popup-wa-box">
+    <div class="popup-wa-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </div>
+    <h2 id="popup-wa-title" class="popup-title" style="font-size:1.5rem">
+      Tu y es presque ! 🎉
+    </h2>
+    <p class="popup-sub" style="margin-bottom:28px;line-height:1.75">
+      Ton inscription est <strong style="color:#fff">presque terminée</strong>.<br/>
+      Rejoins maintenant le groupe WhatsApp exclusif pour recevoir tous les détails du live, les rappels et les bonus réservés aux membres.
+    </p>
+
+    <a id="wa-btn-success" href="https://chat.whatsapp.com/VOTRE-LIEN-ICI" target="_blank" rel="noopener" class="btn-whatsapp" aria-label="Rejoindre le groupe WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      REJOINDRE LE GROUPE WHATSAPP
+    </a>
+
+    <p class="popup-legal" style="margin-top:16px">Le lien expire dans 24h · Groupe exclusif membres inscrits</p>
+  </div>
+</div>
+
+<style>
+/* ── POPUP OVERLAY ── */
+.popup-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  animation:pop-in .35s ease;
+}
+@keyframes pop-in{
+  from{opacity:0}
+  to{opacity:1}
+}
+.popup-box{
+  background:linear-gradient(160deg,#0c1228,#080d1f);
+  border:1px solid rgba(37,99,235,.3);
+  border-radius:24px;
+  padding:40px 36px;
+  max-width:460px;width:100%;
+  position:relative;
+  box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(37,99,235,.12);
+  animation:box-up .35s ease;
+}
+@keyframes box-up{
+  from{opacity:0;transform:translateY(24px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.popup-close{
+  position:absolute;top:16px;right:16px;
+  width:32px;height:32px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#94a3b8;transition:background .2s,color .2s;
+}
+.popup-close:hover{background:rgba(255,255,255,.12);color:#fff}
+.popup-close svg{width:16px;height:16px}
+.popup-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);
+  border-radius:50px;padding:6px 14px;
+  font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#60a5fa;margin-bottom:20px;
+}
+.popup-title{
+  font-family:'Syne',sans-serif;
+  font-size:1.8rem;font-weight:800;letter-spacing:-.02em;
+  line-height:1.15;margin-bottom:8px;
+}
+.popup-sub{
+  font-size:.88rem;color:#94a3b8;margin-bottom:24px;
+}
+.popup-form{display:flex;flex-direction:column;gap:12px}
+.pop-field{position:relative}
+.pop-field input{
+  width:100%;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  padding:15px 18px;
+  color:#fff;font-family:'Inter',sans-serif;font-size:.92rem;
+  outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+}
+.pop-field input::placeholder{color:#64748b}
+.pop-field input:focus{
+  border-color:rgba(37,99,235,.7);
+  background:rgba(37,99,235,.08);
+  box-shadow:0 0 0 3px rgba(37,99,235,.15);
+}
+.pop-phone .phone-flag{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;z-index:1;pointer-events:none;
+}
+.popup-legal{
+  text-align:center;font-size:.72rem;color:#475569;margin-top:14px;
+}
+/* WhatsApp popup */
+.popup-wa-box{text-align:center}
+.popup-wa-icon{
+  width:72px;height:72px;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  box-shadow:0 8px 32px rgba(37,211,102,.35);
+  color:#fff;
+}
+.btn-whatsapp{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  color:#fff;font-family:'Syne',sans-serif;
+  font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  padding:18px 24px;border-radius:12px;
+  box-shadow:0 8px 32px rgba(37,211,102,.4);
+  transition:transform .2s,box-shadow .2s;
+  text-decoration:none;
+}
+.btn-whatsapp:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(37,211,102,.5)}
+</style>
+
+<script>
+/* ── POPUP LOGIC ── */
+
+let submitting = false;
+
+function submitHeroForm(e){
+  e.preventDefault();
+  if(submitting) return;
+  submitting = true;
+  const prenom = document.getElementById('hero-prenom').value.trim();
+  const email  = document.getElementById('hero-email').value.trim();
+  const raw    = document.getElementById('hero-phone').value.trim();
+  // Le user tape sans le 0, ex: 6 12 34 56 78 → on ajoute +33
+  let phone = raw.replace(/[\s\-\.]/g, '');
+  if(phone.startsWith('0')) phone = '+33' + phone.slice(1);
+  else if(!phone.startsWith('+')) phone = '+33' + phone;
+  const date = new Date().toLocaleString('fr-FR');
+
+  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive });
+  fetch(GOOGLE_SHEET_URL + '?' + params.toString())
+    .then(r => r.json())
+    .then(res => {
+      if(res.status === 'duplicate'){
+        document.getElementById('popup-already').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.getElementById('popup-whatsapp').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    })
+    .catch(() => {
+      document.getElementById('popup-whatsapp').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    })
+    .finally(() => { submitting = false; });
+}
+
+function closeAllPopups(){
+  document.getElementById('popup-overlay').style.display='none';
+  document.getElementById('popup-whatsapp').style.display='none';
+  document.getElementById('popup-already').style.display='none';
+  document.body.style.overflow='';
+}
+
+function openPopup(){
+  // Ne rouvre pas si un autre popup est déjà visible
+  if(document.getElementById('popup-whatsapp').style.display==='flex') return;
+  if(document.getElementById('popup-already').style.display==='flex') return;
+  document.getElementById('popup-overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+// Affiche popup après CONFIG.popup.delaiSecondes à chaque chargement de page
+let formSubmitted = false;
+setTimeout(()=>{
+  if(!formSubmitted){
+    document.getElementById('popup-overlay').style.display='flex';
+    document.body.style.overflow='hidden';
+  }
+}, CONFIG.popup.delaiSecondes * 1000);
+
+function closePopup(){
+  document.getElementById('popup-overlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+// ── URL GOOGLE APPS SCRIPT (depuis config.js) ──
+const GOOGLE_SHEET_URL = CONFIG.googleSheet.url;
+
+function formatPhone(raw) {
+  // Supprime tout sauf les chiffres et le +
+  let n = raw.replace(/[\s\-\.\(\)]/g, '');
+  // Si commence par 0 → remplace par +33
+  if (n.startsWith('0')) n = '+33' + n.slice(1);
+  // Si commence par 33 sans + → ajoute +
+  else if (n.startsWith('33') && !n.startsWith('+')) n = '+' + n;
+  // Si commence déjà par +33 → ok
+  // Si le champ est vide ou invalide → on retourne tel quel
+  return n;
+}
+
+function submitPopup(e){
+  e.preventDefault();
+  if(submitting) return;
+  submitting = true;
+  const prenom = document.getElementById('pop-prenom').value.trim();
+  const email  = document.getElementById('pop-email').value.trim();
+  const phone  = formatPhone(document.getElementById('pop-phone').value.trim());
+  const date   = new Date().toLocaleString('fr-FR');
+
+  // Ferme popup 1
+  formSubmitted = true;
+  document.getElementById('popup-overlay').style.display='none';
+
+  // Envoie vers Google Sheets et attend la réponse avant d'afficher le popup
+  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive });
+  const url = GOOGLE_SHEET_URL + '?' + params.toString();
+
+  fetch(url)
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === 'duplicate') {
+        document.getElementById('popup-already').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.getElementById('popup-whatsapp').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    })
+    .catch(() => {
+      document.getElementById('popup-whatsapp').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    })
+    .finally(() => { submitting = false; });
+}
+
+// ── INJECTION CONFIG DANS LE DOM ──
+(function(){
+  // Dates dans les event pills
+  var d1 = CONFIG.soir1.date.slice(0,5); // JJ/MM
+  var d2 = CONFIG.soir2.date.slice(0,5);
+  var y  = CONFIG.soir1.date.slice(6);   // AAAA
+  document.getElementById('pill-dates').textContent = d1 + ' & ' + d2 + '/' + y;
+  document.getElementById('pill-time').textContent  = CONFIG.soir1.heure + ' heure France';
+
+  // Programme Soir 1
+  document.getElementById('prog1-meta-date').textContent = 'Soir 1 — ' + CONFIG.soir1.date;
+  document.getElementById('prog1-meta-time').textContent = 'à ' + CONFIG.soir1.heureAffichage;
+  document.getElementById('prog1-subject').textContent   = CONFIG.soir1.sujet;
+
+  // Programme Soir 2
+  document.getElementById('prog2-meta-date').textContent = 'Soir 2 — ' + CONFIG.soir2.date;
+  document.getElementById('prog2-meta-time').textContent = 'à ' + CONFIG.soir2.heureAffichage;
+  document.getElementById('prog2-subject').textContent   = CONFIG.soir2.sujet;
+
+  // Bottom CTA
+  document.getElementById('bcta-date1').textContent = CONFIG.soir1.date + ' · ' + CONFIG.soir1.heure;
+  document.getElementById('bcta-date2').textContent = CONFIG.soir2.date + ' · ' + CONFIG.soir2.heure;
+
+  // Popup sub
+  document.getElementById('popup-sub-dates').textContent =
+    d1 + ' & ' + d2 + ' à ' + CONFIG.soir1.heure + ' · Places limitées';
+
+  // Liens WhatsApp
+  document.getElementById('wa-btn-already').href = CONFIG.liens.whatsapp;
+  document.getElementById('wa-btn-success').href = CONFIG.liens.whatsapp;
+})();
+
+// Fermer popup WhatsApp en cliquant l'overlay
+document.getElementById('popup-whatsapp').addEventListener('click', function(e){
+  if(e.target === this){
+    this.style.display='none';
+    document.body.style.overflow='';
+  }
+});
+// Fermer popup 1 en cliquant l'overlay
+document.getElementById('popup-overlay').addEventListener('click', function(e){
+  if(e.target === this) closePopup();
+});
+// Fermer avec Echap
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    closePopup();
+    document.getElementById('popup-whatsapp').style.display='none';
+    document.body.style.overflow='';
+  }
+});
+</script>
+</body>
+</html>
