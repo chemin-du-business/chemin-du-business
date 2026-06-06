@@ -34,7 +34,7 @@ const CONFIG = {
 
   // ── LIENS ────────────────────────────────────────────────────
   liens: {
-    whatsapp:   "https://chat.whatsapp.com/VOTRE-LIEN-ICI",
+    whatsapp:   "https://chat.whatsapp.com/IcwJNj1wPIaCzuljXRFRgy",
     instagram:  "https://instagram.com/",
     youtube:    "https://youtube.com/",
   },
