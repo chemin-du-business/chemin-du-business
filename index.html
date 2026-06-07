@@ -588,9 +588,12 @@ footer{
 /* Mobile (≤480px) */
 @media(max-width:480px){
   /* Navbar */
-  nav.main-nav{padding:8px 10px 8px 16px;gap:10px}
-  .nav-logo{font-size:.82rem}
-  .nav-cta{padding:9px 14px;font-size:.72rem}
+  nav.main-nav{padding:6px 6px 6px 14px;gap:8px}
+  .nav-logo{font-size:.78rem}
+  .nav-cta{padding:8px 12px;font-size:.68rem;letter-spacing:.04em}
+
+  /* Chip hero */
+  .chip{white-space:nowrap;font-size:.65rem;padding:6px 12px;gap:6px}
 
   /* Hero */
   .hero{padding:88px 16px 56px}
@@ -682,7 +685,7 @@ footer{
   <div class="hero-inner">
     <div class="chip" role="status">
       <span class="chip-dot" aria-hidden="true"></span>
-      Challenge 48H Gratuit &nbsp;•&nbsp; 2 jours &nbsp;•&nbsp; En ligne
+      Challenge 48H Gratuit &nbsp;•&nbsp; 2 jours &nbsp;•&nbsp; En&nbsp;ligne
     </div>
 
     <h1 id="hero-title">
@@ -757,37 +760,6 @@ footer{
   </div>
 </section>
 
-<!-- ═══════ OVERVIEW ═══════ -->
-<section class="section section-alt" aria-labelledby="overview-title">
-  <div class="wrap">
-    <p class="label reveal">Ce que tu vas apprendre</p>
-    <h2 class="title reveal" id="overview-title">Le challenge en <em>3 étapes</em><br/>pour vendre en 48H</h2>
-    <div class="divider reveal" aria-hidden="true"></div>
-    <p class="sub reveal">Oublie les formations de 40h. Ce challenge, c'est de l'exécution pure — tu repars avec un business lancé, pas des notes.</p>
-
-    <div class="bento reveal">
-      <div class="bento-card">
-        <div class="bento-num" aria-hidden="true">01</div>
-        <h3>Trouver THE produit gagnant</h3>
-        <p>Le problème avant le produit. Utilise TrendTrack et l'IA pour identifier un produit à forte demande avec une marge x3 minimum.</p>
-        <span class="bento-tag">Soir 1</span>
-      </div>
-      <div class="bento-card">
-        <div class="bento-num" aria-hidden="true">02</div>
-        <h3>Créer ta boutique optimisée</h3>
-        <p>Visuels premium par IA, boutique qui convertit dès le premier visiteur, copywriting avec les leviers psychologiques — sans coder.</p>
-        <span class="bento-tag">Soir 2</span>
-      </div>
-      <div class="bento-card">
-        <div class="bento-num" aria-hidden="true">03</div>
-        <h3>Lancer et encaisser</h3>
-        <p>Pub payante, organique ou micro-influenceurs : la bonne stratégie selon ta situation pour avoir tes premières ventes rapidement.</p>
-        <span class="bento-tag">Soir 2</span>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═══════ PROGRAMME ═══════ -->
 <section class="section" aria-labelledby="prog-title">
   <div class="wrap">
@@ -808,14 +780,14 @@ footer{
         <div class="prog-body">
           <h3 id="prog1-subject">Trouver un produit qui se vend<br/>(sans jouer à la loterie)</h3>
           <ul class="prog-list" aria-label="Contenu du soir 1">
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>E-commerce & opportunité IA — le marché à 7 000 Md$ en 2026</li>
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Trouver THE produit : marge x3, valeur perçue > 30€, logistique fluide</li>
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Tutoriel TrendTrack — espionner la concurrence et réduire le risque</li>
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Sourcing & fournisseurs — trouver les marchés cachés</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Pourquoi 90% des gens choisissent le mauvais produit — et comment l'éviter</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>La méthode pour identifier une opportunité réelle sans prendre de risque</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Comment trouver tes fournisseurs et négocier tes premiers prix</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>L'outil que peu de gens utilisent pour voir ce qui se vend en ce moment</li>
           </ul>
           <div class="prog-deliverable">
             <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm2 0a1 1 0 000 2h2a1 1 0 100-2H9zm-2 4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 0a1 1 0 100 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
-            <span><strong style="color:#fff">Livrable :</strong> Ta liste de produits validés + contacts fournisseurs</span>
+            <span><strong style="color:#fff">Livrable :</strong> Ton produit validé + tes contacts fournisseurs prêts à envoyer</span>
           </div>
         </div>
       </article>
@@ -831,14 +803,14 @@ footer{
         <div class="prog-body">
           <h3 id="prog2-subject">Créer ta boutique prête à vendre<br/>avec l'IA</h3>
           <ul class="prog-list" aria-label="Contenu du soir 2">
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Création de visuels premium avec l'IA en quelques minutes</li>
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Boutique optimisée : preuve sociale, urgence, copywriting qui convertit</li>
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Stratégie marketing : pub payante, organique ou micro-influenceurs</li>
-            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Lance la communication et encaisse tes premières ventes</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Comment créer une boutique qui inspire confiance dès la première seconde</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Les visuels qui font vendre — générés avec l'IA en moins de 10 minutes</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Quelle stratégie marketing choisir selon ton budget et ta situation</li>
+            <li><span class="check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="white"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></span>Lancer ta première communication et attendre tes premières notifications de vente</li>
           </ul>
           <div class="prog-deliverable">
             <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm2 0a1 1 0 000 2h2a1 1 0 100-2H9zm-2 4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 0a1 1 0 100 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
-            <span><strong style="color:#fff">Livrable :</strong> Boutique en ligne + 1ère campagne marketing lancée</span>
+            <span><strong style="color:#fff">Livrable :</strong> Ta boutique en ligne active + ta 1ère campagne lancée</span>
           </div>
         </div>
       </article>
