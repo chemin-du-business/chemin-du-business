@@ -1217,11 +1217,13 @@ function submitHeroForm(e){
         document.getElementById('popup-already').style.display = 'flex';
         document.body.style.overflow = 'hidden';
       } else {
+        history.pushState(null, '', '/merci');
         document.getElementById('popup-whatsapp').style.display = 'flex';
         document.body.style.overflow = 'hidden';
       }
     })
     .catch(() => {
+      history.pushState(null, '', '/merci');
       document.getElementById('popup-whatsapp').style.display = 'flex';
       document.body.style.overflow = 'hidden';
     })
@@ -1296,11 +1298,13 @@ function submitPopup(e){
         document.getElementById('popup-already').style.display = 'flex';
         document.body.style.overflow = 'hidden';
       } else {
+        history.pushState(null, '', '/merci');
         document.getElementById('popup-whatsapp').style.display = 'flex';
         document.body.style.overflow = 'hidden';
       }
     })
     .catch(() => {
+      history.pushState(null, '', '/merci');
       document.getElementById('popup-whatsapp').style.display = 'flex';
       document.body.style.overflow = 'hidden';
     })
