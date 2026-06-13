@@ -25,8 +25,8 @@ const CONFIG = {
 
   // ── SOIR 2 ───────────────────────────────────────────────────
   soir2: {
-    date:       "16/06/2026",          // Format : JJ/MM/AAAA (conservé pour usage interne)
-    dateLabel:  "Mardi 16 juin",       // Format affiché sur le site
+    date:       "17/06/2026",          // Format : JJ/MM/AAAA (conservé pour usage interne)
+    dateLabel:  "Mercredi 17 juin",    // Format affiché sur le site
     heure:      "20h30",               // Format : HHhMM
     heureAffichage: "20h30 (heure FR)",
     sujet:      "Boutique IA + Visuels + Stratégie marketing & Lancement",
