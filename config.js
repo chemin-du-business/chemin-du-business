@@ -16,8 +16,8 @@ const CONFIG = {
 
   // ── SOIR 1 ───────────────────────────────────────────────────
   soir1: {
-    date:       "15/06/2026",          // Format : JJ/MM/AAAA (conservé pour usage interne)
-    dateLabel:  "Lundi 15 juin",       // Format affiché sur le site
+    date:       "20/06/2026",          // Format : JJ/MM/AAAA (conservé pour usage interne)
+    dateLabel:  "Lundi 20 juin",       // Format affiché sur le site
     heure:      "20h30",               // Format : HHhMM
     heureAffichage: "20h30 (heure FR)",
     sujet:      "Trouver THE produit gagnant + Sourcing & Fournisseurs",
@@ -25,8 +25,8 @@ const CONFIG = {
 
   // ── SOIR 2 ───────────────────────────────────────────────────
   soir2: {
-    date:       "17/06/2026",          // Format : JJ/MM/AAAA (conservé pour usage interne)
-    dateLabel:  "Mercredi 17 juin",    // Format affiché sur le site
+    date:       "21/06/2026",          // Format : JJ/MM/AAAA (conservé pour usage interne)
+    dateLabel:  "Mardi 21 juin",       // Format affiché sur le site
     heure:      "20h30",               // Format : HHhMM
     heureAffichage: "20h30 (heure FR)",
     sujet:      "Boutique IA + Visuels + Stratégie marketing & Lancement",
