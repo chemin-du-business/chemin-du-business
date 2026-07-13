@@ -46,7 +46,7 @@ const CONFIG = {
 
   // ── GOOGLE SHEETS ────────────────────────────────────────────
   googleSheet: {
-    url: "https://script.google.com/macros/s/AKfycbyrmk-MKrMuYP6ly8LRqtd_lY1OA9MwJlTocF3XneDS3l1njlsakqojKVuO5kWJj-zsRg/exec",
+    url: "https://script.google.com/macros/s/AKfycbyxkQZeY_8hpvjr4n58hiUuzkUFHaeR5rpl9XaeSOGBskjhYZUlxhd1rIr2reSpCPa4FA/exec",
   },
 
 };
