@@ -1247,13 +1247,27 @@ function submitHeroForm(e){
   const date = new Date().toLocaleString('fr-FR');
 
   const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure, utm_source: document.getElementById('hero-utm-source').value, utm_campaign: document.getElementById('hero-utm-campaign').value, utm_term: document.getElementById('hero-utm-term').value, utm_content: document.getElementById('hero-utm-content').value });
-  history.pushState(null, '', '/merci');
-  if(window.snaptr) snaptr('track', 'SIGN_UP');
-  if(window.fbq) fbq('track', 'Lead');
-  document.getElementById('popup-whatsapp').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  submitting = false;
-  fetch(GOOGLE_SHEET_URL + '?' + params.toString(), { mode: 'no-cors' }).catch(() => {});
+  fetch(GOOGLE_SHEET_URL + '?' + params.toString(), { redirect: 'follow' })
+    .then(r => r.json())
+    .then(res => {
+      if(res.status === 'duplicate'){
+        document.getElementById('popup-already').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      } else {
+        history.pushState(null, '', '/merci');
+        if(window.snaptr) snaptr('track', 'SIGN_UP');
+        if(window.fbq) fbq('track', 'Lead');
+        document.getElementById('popup-whatsapp').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    })
+    .catch(() => {
+      history.pushState(null, '', '/merci');
+      if(window.snaptr) snaptr('track', 'SIGN_UP');
+      document.getElementById('popup-whatsapp').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    })
+    .finally(() => { submitting = false; });
 }
 
 function closeAllPopups(){
@@ -1317,13 +1331,27 @@ function submitPopup(e){
   const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure, utm_source: document.getElementById('pop-utm-source').value, utm_campaign: document.getElementById('pop-utm-campaign').value, utm_term: document.getElementById('pop-utm-term').value, utm_content: document.getElementById('pop-utm-content').value });
   const url = GOOGLE_SHEET_URL + '?' + params.toString();
 
-  history.pushState(null, '', '/merci');
-  if(window.snaptr) snaptr('track', 'SIGN_UP');
-  if(window.fbq) fbq('track', 'Lead');
-  document.getElementById('popup-whatsapp').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  submitting = false;
-  fetch(url, { mode: 'no-cors' }).catch(() => {});
+  fetch(url, { redirect: 'follow' })
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === 'duplicate') {
+        document.getElementById('popup-already').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      } else {
+        history.pushState(null, '', '/merci');
+        if(window.snaptr) snaptr('track', 'SIGN_UP');
+        if(window.fbq) fbq('track', 'Lead');
+        document.getElementById('popup-whatsapp').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    })
+    .catch(() => {
+      history.pushState(null, '', '/merci');
+      if(window.snaptr) snaptr('track', 'SIGN_UP');
+      document.getElementById('popup-whatsapp').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    })
+    .finally(() => { submitting = false; });
 }
 
 // ── UTM TRACKING ──
