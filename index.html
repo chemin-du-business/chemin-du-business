@@ -784,6 +784,10 @@ footer{
           <span class="fbadge"><span class="fbadge-dot"></span>Débutants acceptés</span>
           <span class="fbadge"><span class="fbadge-dot"></span>Places limitées</span>
         </div>
+        <input type="hidden" id="hero-utm-source"/>
+        <input type="hidden" id="hero-utm-campaign"/>
+        <input type="hidden" id="hero-utm-term"/>
+        <input type="hidden" id="hero-utm-content"/>
       </form>
     </div>
   </div>
@@ -1054,6 +1058,10 @@ document.querySelectorAll('.prog-card').forEach((el,i)=>{
         </div>
         <input id="pop-phone" type="tel" inputmode="tel" placeholder="Votre n° de téléphone" autocomplete="tel" style="padding-left:82px"/>
       </div>
+      <input type="hidden" id="pop-utm-source"/>
+      <input type="hidden" id="pop-utm-campaign"/>
+      <input type="hidden" id="pop-utm-term"/>
+      <input type="hidden" id="pop-utm-content"/>
       <button type="submit" class="btn-submit" style="margin-top:8px">
         S'INSCRIRE AU LIVE →
       </button>
@@ -1238,7 +1246,7 @@ function submitHeroForm(e){
   else if(!phone.startsWith('+')) phone = '+33' + phone;
   const date = new Date().toLocaleString('fr-FR');
 
-  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure });
+  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure, utm_source: document.getElementById('hero-utm-source').value, utm_campaign: document.getElementById('hero-utm-campaign').value, utm_term: document.getElementById('hero-utm-term').value, utm_content: document.getElementById('hero-utm-content').value });
   fetch(GOOGLE_SHEET_URL + '?' + params.toString())
     .then(r => r.json())
     .then(res => {
@@ -1320,7 +1328,7 @@ function submitPopup(e){
   document.getElementById('popup-overlay').style.display='none';
 
   // Envoie vers Google Sheets et attend la réponse avant d'afficher le popup
-  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure });
+  const params = new URLSearchParams({ prenom, email, phone, date, lienLive: CONFIG.live.lienLive, soir1Date: CONFIG.soir1.dateLabel + ' ' + CONFIG.soir1.date.slice(6), soir1Heure: CONFIG.soir1.heure, soir2Date: CONFIG.soir2.dateLabel + ' ' + CONFIG.soir2.date.slice(6), soir2Heure: CONFIG.soir2.heure, utm_source: document.getElementById('pop-utm-source').value, utm_campaign: document.getElementById('pop-utm-campaign').value, utm_term: document.getElementById('pop-utm-term').value, utm_content: document.getElementById('pop-utm-content').value });
   const url = GOOGLE_SHEET_URL + '?' + params.toString();
 
   fetch(url)
@@ -1345,6 +1353,24 @@ function submitPopup(e){
     })
     .finally(() => { submitting = false; });
 }
+
+// ── UTM TRACKING ──
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var keys = ['utm_source','utm_campaign','utm_term','utm_content'];
+  keys.forEach(function(k){
+    var val = params.get(k);
+    if(val) localStorage.setItem(k, val);
+  });
+  function fillUtm(prefix){
+    keys.forEach(function(k){
+      var el = document.getElementById(prefix + k.replace('utm_','-utm-'));
+      if(el) el.value = localStorage.getItem(k) || '';
+    });
+  }
+  fillUtm('hero');
+  fillUtm('pop');
+})();
 
 // ── INJECTION CONFIG DANS LE DOM ──
 (function(){
