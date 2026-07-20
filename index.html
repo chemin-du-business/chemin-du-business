@@ -1262,8 +1262,6 @@ function submitHeroForm(e){
       }
     })
     .catch(() => {
-      history.pushState(null, '', '/merci');
-      if(window.snaptr) snaptr('track', 'SIGN_UP');
       document.getElementById('popup-whatsapp').style.display = 'flex';
       document.body.style.overflow = 'hidden';
     })
@@ -1346,8 +1344,6 @@ function submitPopup(e){
       }
     })
     .catch(() => {
-      history.pushState(null, '', '/merci');
-      if(window.snaptr) snaptr('track', 'SIGN_UP');
       document.getElementById('popup-whatsapp').style.display = 'flex';
       document.body.style.overflow = 'hidden';
     })
